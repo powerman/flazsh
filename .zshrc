@@ -98,6 +98,7 @@
 #   Если какой-то плагин их изменит нежелательным образом - нужно вернуть
 #   исходное значение сразу после загрузки этого плагина.
 # - Настройки плагинов, которые необходимо установить перед их загрузкой.
+GOPATH=$(go env GOPATH 2>/dev/null || echo ~/go)
 typeset -U path
 if [[ $EUID = 0 ]] || [[ $USER = root ]]; then
 	path=(
@@ -109,7 +110,7 @@ else
 		~/.local/bin
 		/mnt/storage/games/bin/
 		$path
-		$(go env GOPATH)/bin
+		$GOPATH/bin
 		~/perl5/bin/
 		~/node_modules/.bin/
 		~/.gem/ruby/*/bin(N[-1])	# корректнее, но медленнее: $(gem env gemdir)/bin
@@ -312,9 +313,9 @@ zstyle ':completion:*:manuals'	                separate-sections	true
 hash -d Go=~/proj/go
 hash -d Perl=~/proj/perl
 hash -d Rajeev=~/proj/rajeev
-hash -d CPDPro=$(go env GOPATH)/src/github.com/dentalcpdpro
+hash -d CPDPro=$GOPATH/src/github.com/dentalcpdpro
 hash -d DF=~/proj/qarea/duefocus
-hash -d MTM=$(go env GOPATH)/src/github.com/mtgroupit
+hash -d MTM=$GOPATH/src/github.com/mtgroupit
 
 cdpath=(
 	.
