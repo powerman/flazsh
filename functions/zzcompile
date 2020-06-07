@@ -1,0 +1,5 @@
+# (Re-)Compile source files in background, if needed.
+[[ $1.zwc -nt $1 ]] || {
+	sleep 1         # looks like mtime difference must be > 1 sec, or .zwc will be ignored
+	zcompile -U $1
+} &!

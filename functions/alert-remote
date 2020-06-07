@@ -1,0 +1,4 @@
+# Use like so: sleep 10; alert
+local icon=${${${?#0}:+error}:-info}
+local cmd="$({ fc -lIn -2 2>/dev/null; fc -lIn $HISTCMD } | sed 's/\(^\|;\)\s*alert\s*$//;/^$/d' | tail -n 1)"
+notify-remote 86400 low $icon $HOST $cmd

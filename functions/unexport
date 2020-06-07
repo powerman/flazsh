@@ -1,0 +1,5 @@
+if (( ${(P)+1} )); then
+	local value=${(P)1}
+	unset $1
+	typeset -g $1=$value
+fi

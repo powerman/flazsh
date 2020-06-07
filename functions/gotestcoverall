@@ -1,0 +1,4 @@
+local pkgs=($(gopkgs))
+gotestcover -coverprofile cover.out -coverpkg ${(j<,>)pkgs} $pkgs &&
+go tool cover -html cover.out &&
+rm cover.out

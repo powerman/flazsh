@@ -1,0 +1,7 @@
+# Safe bindkey for keys beginning with "-" or absent/empty keys.
+# Usage:
+#       zbindkey $somekey some-widget
+#       zbindkey -M somemap $somemap some-widget
+[[ $# == 2 && -n $1 || $# == 4 && -n $3 ]] || return 1
+[[ $# == 2 ]] && argv[1,0]=(--) || argv[3,2]=(--)
+bindkey "$@"

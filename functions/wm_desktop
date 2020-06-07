@@ -1,0 +1,7 @@
+local pid=$$ id= n0=
+while [ 1 != $pid ]; do
+	id=$(cat /proc/$pid/environ | tr \\0 $'\n' | grep WINDOWID | cut -d= -f 2)
+	[ -n "$id" ] && n0=$(xprop -id "$id" _NET_WM_DESKTOP | cut -d" " -f 3)
+	[ -n "$n0" ] && echo $((n0+1)) && return
+	pid=$(($(/bin/ps -o ppid= $pid)))
+done 2>/dev/null

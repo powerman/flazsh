@@ -1,0 +1,4 @@
+# Use like so: sleep 10; alert
+local icon=${${${?#0}:+error}:-terminal}
+local cmd="$({ fc -lIn -2 2>/dev/null; fc -lIn $HISTCMD } | sed 's/\(^\|;\)\s*alert\s*$//;/^$/d' | tail -n 1)"
+notify-send -t 86400 -u low -i $icon "Desktop $(wm_desktop)" "$(escape_xml <<<$cmd)"

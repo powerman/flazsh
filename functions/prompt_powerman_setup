@@ -1,0 +1,280 @@
+function prompt_powerman_precmd {
+	setopt LOCAL_OPTIONS EXTENDED_GLOB
+	local REMOTES D=$PWD
+	psvar=()
+	[[ ! -w . ]]                            && psvar[1]=ReadOnly
+	[[ ! -r . ]]                            && psvar[2]=Hidden
+	[[ -n .(#qNf+1007) ]]                   && psvar[3]=Trash
+	REMOTES="$(git remote -v 2>/dev/null)"
+	(( $? == 0 ))                           && psvar[10]=RepoGit    &&
+	[[ $REMOTES == *github* ]]              && psvar[11]=Github
+	[[ -n $SSH_TTY ]]                       && psvar[20]=SSH
+	[[ -e /.dockerenv ]]                    && psvar[21]=Docker
+	[[ $PWD == $HOME ]]                     && psvar[30]=Home
+	[[ $PWD == */(.|)(#i)dropbox/(.|)* ]]   && psvar[31]=Dropbox
+	[[ $PWD == */tmp(|/(|.)*) ]]            && psvar[32]=Temporary
+	[[ $PWD == (/etc/(.|)*|*/.*) ]]         && psvar[33]=Config
+	[[ $PWD == ${gopath[1]:-~/go}/(.|)* ]]  && psvar[34]=Go
+	while [[ $D != / ]]; do
+		[[ -n $D(#qNf-0077) ]]          && psvar[4]=Secure
+		[[ -z $psvar[10] && -z $psvar[12] && -d $D/.hg ]] \
+						&& psvar[12]=RepoHg     &&
+		[[ -r $D/.hg/hgrc && $(<$D/.hg/hgrc) == *bitbucket* ]] \
+						&& psvar[13]=Bitbucket
+		D=$D:h
+	done
+	if [[ -n $_PROMPT_CMD_START ]]; then
+		local elapsed=$(( $(print -P '%D{%s}') - _PROMPT_CMD_START ))
+		_PROMPT_CMD_START=
+		(( elapsed >= 3 ))              && psvar[50]=$(prompt_powerman_elapsed $elapsed)
+	fi
+	# vcs_info
+}
+
+function prompt_powerman_preexec {
+	typeset -g _PROMPT_CMD_START=$(print -P '%D{%s}')
+}
+
+function prompt_powerman_elapsed {
+	local elapsed=$1
+	local seconds=$(( elapsed % 60 ))
+	local minutes=$(( elapsed / 60 % 60 ))
+	local hours=$(( elapsed / 60 / 60 ))
+	if (( hours )); then
+		printf "%d:%02d:%02d" $hours $minutes $seconds
+	elif (( minutes )); then
+		printf "%d:%02d" $minutes $seconds
+	else
+		printf $seconds
+	fi
+}
+
+function prompt_powerman_wcwidth_icons {
+	emulate -L zsh
+	setopt EXTENDED_GLOB HIST_SUBST_PATTERN
+	local v
+	if [[ -n $MC_SID ]]; then
+		PROMPT=${PROMPT:gs/[]/ %#/}
+		RPROMPT=
+		for v in $(noglob typeset +m PROMPT ZSH_THEME_*); do
+			typeset -g $v=${(P)v:gs//↑/}
+			typeset -g $v=${(P)v:gs//↓/}
+			typeset -g $v=${(P)v:gs//✖/}
+			typeset -g $v=${(P)v:gs//●/} # FIXME del/ren/mod may be staged too
+			typeset -g $v=${(P)v:gs//…/}
+			typeset -g $v=${(P)v:gs//⚑/} # FIXME not in D2Coding font
+			# All double-width icons in Nerd Fonts.
+			typeset -g $v=${(P)v:gs/(#m)([⏻-⏾♥⚡⭘--])//}
+		done
+	fi
+	if [[ $TERM == linux ]]; then
+		PROMPT=${PROMPT:gs/[]/ %#/}
+		RPROMPT=
+		for v in $(noglob typeset +m {,R}PROMPT{,<->} PROMPT_EOL_MARK ZSH_THEME_*); do
+			typeset -g $v=${(P)v:gs/(#m)([^ -~])//}
+		done
+	fi
+	if [[ $LD_PRELOAD != *wcwidth-icons* ]]; then
+		for v in $(noglob typeset +m {,R}PROMPT{,<->} PROMPT_EOL_MARK ZSH_THEME_*); do
+			# All double-width icons in Nerd Fonts.
+			typeset -g $v=${(P)v:gs/(#m)([⏻-⏾♥⚡⭘--])/%{${MATCH}%2G%}/}
+		done
+	fi
+}
+
+# ‸ ‹ › ← ↑ → ↓ ↔ ↕ ↖ ↗ ↘ ↙ ⇒ ⇡ ⇣ ➜ ➡ ➤ ▴ ▶ ▷ ▾ ◀ ◁ ━ ┃
+# • ■ □ ▪ ▫ ○ ● ☀ ✱ ☑ √ ✓ ✕ ✖ ✗ ✘ ✚ † ✝ ☮ ☯ ☹ ☺ ☻ ☠ ∞ ⑊
+#      
+#             
+#             
+# 
+# 
+# 
+# 
+# ⚡
+# 
+# 
+# 
+# 
+# ♥
+# 
+# 
+# 
+# 
+# 
+
+function prompt_powerman_setup {
+	local -A c=(
+		host            $pal[red7]
+		i_ro            $pal[red2]
+		i_dir           $(rand_color 3 4)       # non-intense color
+		dir_pfx         $pal[cyan1]
+		dir             $pal[cyan2]
+		repo_branch     $pal[grey2]
+		repo_dirty      $pal[yellow1]
+		root_ok         $pal[yellow3]
+		root_err        $pal[red3]
+		user_ok         $pal[green2]
+		user_err        $pal[red2]
+		cmd_time        $pal[grey1]
+		bg_job          $pal[yellow1]
+		repo_diverged   $pal[orange3]           # ahead & behind
+		repo_ahead      $pal[green3]
+		repo_behind     $pal[orange3]
+		repo_local      $pal[orange3]           # no remote
+		repo_commit     $pal[grey2]
+		repo_unmerged   $pal[red4]
+		repo_stashed    $pal[magenta3]
+		repo_deleted    $pal[red1]
+		repo_renamed    $pal[yellow1]
+		repo_modified   $pal[yellow1]
+		repo_added      $pal[green1]
+		repo_untracked  $pal[grey2]
+		i_secure        $pal[green0]
+		sh_lvl          $pal[orange3]
+		parser_status   $pal[grey2]
+		no_eol          $pal[orange2]
+	)
+	local host="%20(V %F{$c[host]}%B%m%b%f➤ )"
+	local i_dir_ro="%1(V %F{$c[i_ro]} )"
+	local i_dir="%F{$c[i_dir]}%2(V  %3(V  %30(V  %31(V  %32(V  %34(V  %11(V  %10(V  %13(V  %12(V  %33(V  )))))))))))"
+	local dir="%4(~ %F{$c[dir_pfx]}%-2~%f…%B%F{$c[dir]}%1~%f%b %B%F{$c[dir]}%~%f%b)"
+	local ret_status="%(# %(? %F{$c[root_ok]} %F{$c[root_err]})%f %(? %F{$c[user_ok]} %F{$c[user_err]})%f)"
+	local r_edge="   "
+	local cmd_time="%50(V %F{$c[cmd_time]}%50v%f )"
+	local bg_job="%1(j %F{$c[bg_job]}%2(j %j )%f )"
+	local i_dir_secure="%4(V %F{$c[i_secure]}%f )"
+	local sh_lvl="%2(L %F{$c[sh_lvl]}%3(L %L )%f )"
+	local r_parser_status="%B%F{$c[parser_status]}« %^%f%b"
+
+	# $(git_prompt_info)
+	DISABLE_UNTRACKED_FILES_DIRTY=true
+	ZSH_THEME_GIT_PROMPT_PREFIX=" %B%F{$c[repo_branch]}"
+	ZSH_THEME_GIT_PROMPT_DIRTY="%F{$c[repo_dirty]}✘"
+	ZSH_THEME_GIT_PROMPT_CLEAN=
+	ZSH_THEME_GIT_PROMPT_SUFFIX="%f%b"
+	# $(git_commits_ahead)
+	ZSH_THEME_GIT_COMMITS_AHEAD_PREFIX="%F{$c[repo_ahead]}"
+	ZSH_THEME_GIT_COMMITS_AHEAD_SUFFIX="%f"
+	# $(git_commits_behind)
+	ZSH_THEME_GIT_COMMITS_BEHIND_PREFIX="%F{$c[repo_behind]}"
+	ZSH_THEME_GIT_COMMITS_BEHIND_SUFFIX="%f"
+	# $(git_prompt_ahead)
+	ZSH_THEME_GIT_PROMPT_AHEAD="$ZSH_THEME_GIT_COMMITS_AHEAD_PREFIX$ZSH_THEME_GIT_COMMITS_AHEAD_SUFFIX"
+	# $(git_prompt_behind)
+	ZSH_THEME_GIT_PROMPT_BEHIND="$ZSH_THEME_GIT_COMMITS_BEHIND_PREFIX$ZSH_THEME_GIT_COMMITS_BEHIND_SUFFIX"
+	# $(git_prompt_remote)
+	ZSH_THEME_GIT_PROMPT_REMOTE_EXISTS=
+	ZSH_THEME_GIT_PROMPT_REMOTE_MISSING="%F{$c[repo_local]}%f"
+	# $(git_prompt_short_sha) or $(git_prompt_long_sha)
+	ZSH_THEME_GIT_PROMPT_SHA_BEFORE="%F{$c[repo_commit]}"
+	ZSH_THEME_GIT_PROMPT_SHA_AFTER="%f"
+	# $(git_prompt_status)
+	# TODO я бы предпочёл практически обратный порядок: 
+	ZSH_THEME_GIT_PROMPT_DIVERGED="$ZSH_THEME_GIT_PROMPT_AHEAD$ZSH_THEME_GIT_PROMPT_BEHIND"
+	ZSH_THEME_GIT_PROMPT_BEHIND="$ZSH_THEME_GIT_PROMPT_BEHIND"      # same var, here as doc
+	ZSH_THEME_GIT_PROMPT_AHEAD="$ZSH_THEME_GIT_PROMPT_AHEAD"        # same var, here as doc
+	ZSH_THEME_GIT_PROMPT_UNMERGED="%F{$c[repo_unmerged]}%f"
+	ZSH_THEME_GIT_PROMPT_STASHED="%F{$c[repo_stashed]}%f"
+	ZSH_THEME_GIT_PROMPT_DELETED="%F{$c[repo_deleted]}%f"
+	ZSH_THEME_GIT_PROMPT_RENAMED="%F{$c[repo_renamed]}%f"
+	ZSH_THEME_GIT_PROMPT_MODIFIED="%F{$c[repo_modified]}%f"
+	ZSH_THEME_GIT_PROMPT_ADDED="%F{$c[repo_added]}%f"
+	ZSH_THEME_GIT_PROMPT_UNTRACKED="%F{$c[repo_untracked]}%f"
+	# $(git_remote_status)%f
+	ZSH_THEME_GIT_PROMPT_REMOTE_STATUS_DETAILED=true
+	ZSH_THEME_GIT_PROMPT_REMOTE_STATUS_PREFIX=              # if DETAILED
+	ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE_COLOR=                # if DETAILED
+	ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE="$ZSH_THEME_GIT_COMMITS_AHEAD_PREFIX"
+	ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE_COLOR=               # if DETAILED
+	ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE="$ZSH_THEME_GIT_COMMITS_BEHIND_PREFIX"
+	ZSH_THEME_GIT_PROMPT_DIVERGED_REMOTE="$ZSH_THEME_GIT_PROMPT_DIVERGED"  # if not DETAILED
+	ZSH_THEME_GIT_PROMPT_EQUAL_REMOTE=                      # if not DETAILED
+	ZSH_THEME_GIT_PROMPT_REMOTE_STATUS_SUFFIX=              # if DETAILED
+
+	# Альтернативы:
+	# - vcprompt
+	# - oh-my-zsh lib/git.sh
+	# - oh-my-zsh plugins/git-prompt (хелпер на python)
+	#       git status --porcelain --branch
+	#       git log -1 --format="%h%d"      (тег)
+	# - oh-my-zsh plugins/gitfast
+	#       по-моему вариант bash-евского (родной из git?)
+	# - prezto modules/git
+	#       дофига команд, вроде на базе vcs_info
+
+	# Выводимая информация:
+	#               vcprompt        vcs_info        oh-my-zsh
+	# - untracked   ?                               ?       
+	# - renamed                      S              R       
+	# - added                        S              +       
+	# - modified    +               U               E       
+	# - deleted     +               U               X       
+	# - add+mod     +               US                      
+	# - add+del     +               US                      
+	# - stashed                                     S       
+	# - unmerged                    TODO            H       
+	# - ahead                                       A       
+	# - behind                                      B       
+	# - local                                       L       
+	# vcs_info:
+	# - работает в 1.5 раза медленее vcprompt и в 2 раза быстрее oh-my-zsh
+	#   TODO сравнить для hg
+	# - значительно более настраиваемый чем vcprompt
+	# - умеет выводить чуть больше инфы чем vcprompt: action,repo root
+	# - умеет выводить значительно меньше инфы, чем oh-my-zsh:
+	#       ahead/behind remote,unmerged,stashed,add/rename/mod/del
+	#       TODO может unmerged заменяется action?
+	# - поддерживает hg, в отличие от oh-my-zsh
+	# CONTEXT :vcs_info:vcs-string:user-context:repo-root-name
+	#       vcs-string: -init-|-preinit-|formats|(git|hg|hg-git)([+]$hook)?
+	#               -init-          while detecting VCS
+	#               -preinit-       ???
+	#               formats         used by $(vcs_info_lastmsg)
+	#       user-context: default|command|$vcs_info_arg_1
+	#               default         no $vcs_info_arg_1
+	#               command         used by $(vcs_info_lastmsg)
+	#       repo-root-name: -all-:$workdir
+	#               -all-           while detecting VCS
+	#               STYLES          formats actionformats branchformat
+	# STYLES formats|actionformats|disable-patterns
+	#       formats                 (" (%s)-[%b]%u%c-")    normal
+	#       actionformats           (" (%s)-[%b|%a]%u%c-") merge conflict/interactive rebase
+	#       disable-patterns        ()    glob to switch off $(vcs_info) in some $PWD
+	#       check-for-changes       false enable: %c %u (may be slow)
+	#      check-for-staged-changes false enable: %c (not so slow)
+	#       stagedstr               "S"   value for %c (git)
+	#       unstagedstr             "U"   value for %u (git, hg)
+	#       use-simple              false (hg) require false for %u (faster when true)
+	#       get-revision            false (hg) enable: %i; require true for %u
+	#       get-bookmarks           false (hg) enable: %m
+	#       use-prompt-escapes      true  (vcs_info_lastmsg)
+	#       hooks                   ()    func
+	#       patch-format            affects %m somehow
+	#       nopatch-format          affects %m somehow
+	# Format
+	#       %b branch
+	#       %a action identifier
+	#       %c
+	#       %u
+	#       %m something
+	# Можно заменить свой код автодетекта git/hg на $vcs_info_msg_*_
+	# autoload -Uz vcs_info
+	# zstyle ':vcs_info:*' enable             git hg
+	# zstyle ':vcs_info:*' actionformats      '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{3}|%F{1}%a%F{5}]%f '
+	# zstyle ':vcs_info:*' formats            '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{5}]%f '
+
+	PROMPT="${host}${i_dir_ro}${i_dir}${dir}\$(git_prompt_info)${ret_status} "
+	RPROMPT="${r_edge}${cmd_time}${bg_job}\$(git_prompt_status)%10(V \$(git_prompt_remote) )${i_dir_secure}${sh_lvl}"
+	PROMPT2=
+	RPROMPT2="${r_edge}${r_parser_status}"
+	PROMPT_EOL_MARK="%F{$c[no_eol]}%f"
+
+	preexec_functions+=(prompt_powerman_preexec)
+	precmd_functions+=(prompt_powerman_precmd)
+
+	prompt_powerman_wcwidth_icons
+}
+
+autoload -Uz palette256; palette256
+prompt_powerman_setup "$@"

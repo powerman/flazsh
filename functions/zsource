@@ -1,0 +1,3 @@
+# Ensure sourced file will be loaded faster… at least next time.
+source $1
+zzcompile $1

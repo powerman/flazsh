@@ -1,0 +1,131 @@
+# Return random color from xterm 6x6x6 color cube.
+# Example: to get visible but non-intense color use `rand_color 3 4`.
+function rand_color {
+	local min=${1:-0} max=${2:-6} # TODO add min saturation and max lightness
+	local r g b
+	while (( r=RANDOM % max, g=RANDOM % max, b=RANDOM % max, r+g+b<min )) {}
+	RGB6 $r $g $b
+}
+
+# Print nice color palette with base color markers.
+function palette {
+	integer base=0
+	[[ $1 == (-b|--base) ]] && { base=1; shift }
+	[[ $1 == -* ]] && { print "Usage: $0 [-b|--base] [background]"; return }
+	integer background=$1
+	local text=Test
+
+	# columns for base color markers (and base colors with --base)
+	local norm=(1 3 0 2 0 6 4 0 5) bold=(9 0 11 10 0 14 12 0 13)
+	
+	print -n '  '; print -C 9 'red     ' orange yellow green azure cyan blue purple magenta
+	integer row col c
+	for ((row=0; row<$#_pal/9; row++)); do
+		print -n -P "${row/10/ } %K{$background}"
+
+		for ((col=1; col<=9; col++)); do
+			c=${_pal[$(( row*9 + col ))]}
+			print -n -P "%F{$c}$text ${(l:3:)c}%f"
+
+			# base color markers
+			if (( row==1 && norm[$col] )); then
+				print -n -P "%F{$norm[$col]}▂%f "
+			elif (( row==2 && norm[$col] )); then
+				print -n -P "%S%F{$norm[$col]}▆%f%s "
+			elif (( row==7 && bold[$col] )); then
+				print -n -P "%F{$bold[$col]}▂%f "
+			elif (( row==8 && bold[$col] )); then
+				print -n -P "%S%F{$bold[$col]}▆%f%s "
+			else
+				print -n "  "
+			fi
+		done
+
+		# base colors when --base
+		if ((base && row==1)); then
+			print
+			print -n "  "
+			for c in $norm; print -n -P "%F{$c}$text ${(l:3:)c}%f  "
+		fi
+		if ((base && row==7)); then
+			print
+			print -n "  "
+			for c in $bold; print -n -P "%F{$c}$text ${(l:3:)c}%f  "
+		fi
+
+		print -P "%k"
+	done
+	print -n '  '; print -C 9 'grey0   ' grey{1..8}
+}
+
+# Return 9-color rainbow for given saturation and lightness.
+function HSL6_rainbow {
+	integer s=$1 l=$2
+	print 	$(RGB6 $s $l $l) $(RGB6 $s $((s/2)) $l) $(RGB6 $s $s $l) \
+		$(RGB6 $l $s $l) $(RGB6 $l $((s/2)) $s) $(RGB6 $l $s $s) \
+		$(RGB6 $l $l $s) $(RGB6 $((s/2)) $l $s) $(RGB6 $s $l $s)
+}
+
+# Convert RGB (each with value set to 0…5) to xterm 256 color number using
+# 216 colors from 6x6x6 color cube.
+function RGB6 {
+	integer r=$1 g=$2 b=$3
+	print $(( 16 + (r*6*6 + g*6 + b) ))
+}
+
+# Exports array _pal with 87 colors.
+# Exports hash pal to access _pal colors by name+number.
+function palette256 {
+	if [[ -s $ZSH_CACHE_DIR/palette256.pal ]]; then
+		typeset -g _pal=($(<$ZSH_CACHE_DIR/palette256._pal))
+		typeset -g -A pal=($(<$ZSH_CACHE_DIR/palette256.pal))
+		return
+	fi
+
+	# grey colors
+	local grey=(
+		$(RGB6 0 0 0)   # same as 0, but not affected by bold attribute
+		236             # manually chosen
+		8
+		$(RGB6 1 1 1)
+		$(RGB6 2 2 2)   # same as 7, but not affected by bold attribute
+		$(RGB6 3 3 3)
+		15
+		$(RGB6 4 4 4)
+		$(RGB6 5 5 5)   # max (it's brighter than 255)
+	)
+	typeset -g _pal=(
+		# pure colors
+		$(HSL6_rainbow 1 0)
+		$(HSL6_rainbow 2 0)
+		$(HSL6_rainbow 3 0)
+		$(HSL6_rainbow 4 0)
+		$(HSL6_rainbow 5 0)
+		# manually selected saturation/lightness for light colors
+		$(HSL6_rainbow 2 1)
+		$(HSL6_rainbow 3 1)
+		$(HSL6_rainbow 4 1)
+		$(HSL6_rainbow 5 1)
+		$(HSL6_rainbow 5 2)
+		$grey
+	)
+	integer row col
+	for col in 2 5 8; for row in 0 5 6 9; _pal[$(( row*9 + col))]=0 # remove duplicates
+	local name=(red orange yellow green azure cyan blue purple magenta)
+	typeset -g -A pal
+	for row in {0..9}; do
+		for col in {1..9}; do
+			pal[${name[$col]}$row]=$_pal[$(( row*9 + col ))]
+		done
+	done
+	for col in {1..9}; pal[grey$((col-1))]=$grey[$col]
+	for col in {1..9}; pal[gray$((col-1))]=$grey[$col] # allow both grey/gray
+
+	if [[ -d $ZSH_CACHE_DIR ]]; then
+		print $_pal > $ZSH_CACHE_DIR/palette256._pal
+		print ${(kv@)pal} > $ZSH_CACHE_DIR/palette256.pal
+	fi
+}
+
+[[ $ZSH_CACHE_DIR/palette256.pal -ot ${(%):-%x} ]] && rm $ZSH_CACHE_DIR/palette256.pal
+palette256
