@@ -220,7 +220,7 @@ function expand-or-complete-with-indicator() {
 }
 zle -N expand-or-complete-with-indicator
 
-source /usr/libexec/mc/mc.sh		# allow mc to chdir to its latest working dir at exit
+source /usr/lib*/mc/mc.sh		# allow mc to chdir to its latest working dir at exit
 zsource $OMZ/../lib/git.zsh		# нужно для тем OMZ и моей
 zsource $OMZ/../lib/spectrum.zsh	# more cool colors
 zsource $OMZ/../lib/termsupport.zsh	# update term/screen title
@@ -421,7 +421,7 @@ alias history='fc -liD'			# показывать время выполнения
 alias type='type -aS'			# самый короткий и подробный whence/which/where
 alias which-command=whence		# запускается по Esc-? (на Alt-? плагин urxvt)
 
-unalias run-help
+alias run-help &>/dev/null && unalias run-help
 autoload -Uz run-help			# запускается по Alt-h
 alias help=run-help
 autoload -Uz run-help-git
@@ -462,7 +462,11 @@ alias mysql='mysql --pager="less -XSFe"'
 alias reboot='/sbin/runit-init 6'
 alias halt='/sbin/runit-init 0'
 
-source /usr/share/grc/grc.zsh
+if test -f /usr/share/grc/grc.zsh; then
+	source /usr/share/grc/grc.zsh
+elif test -f /etc/grc.zsh; then
+	source /etc/grc.zsh
+fi
 alias ls='ls --color=auto'  # disable grc because of https://github.com/garabik/grc/issues/144
 unalias make		    # disable grc because of https://github.com/garabik/grc/issues/123
 
