@@ -9,9 +9,10 @@ to use themes/plugins from any of them.
 
 ## Install
 
-Remove `~/.zsh/`, then:
+Remove `~/.zsh*`, then:
 
 ```
+echo 'ZDOTDIR=~/.zsh' > ~/.zshenv
 git clone https://github.com/powerman/flazsh ~/.zsh
 ```
 
