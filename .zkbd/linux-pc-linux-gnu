@@ -24,3 +24,74 @@ key[Left]='^[[D'
 key[Down]='^[[B'
 key[Right]='^[[C'
 key[Menu]=''''
+
+key[Tab]='^I'
+key[S-Tab]='^[[Z'
+key[C-Backspace]='^H'
+# key[S-Insert]=''              # paste
+key[S-Delete]='^[[3;2~'
+key[C-Insert]='^[[2;5~'
+# key[C-Delete]=''              # used by urxvt plugin
+
+key[S-Up]='^[[1;2A'
+key[S-Down]='^[[1;2B'
+key[S-Right]='^[[1;2C'
+key[S-Left]='^[[1;2D'
+key[S-Home]='^[[1;2H'
+key[S-End]='^[[1;2F'
+# key[S-PageUp]=''              # terminal scroll
+# key[S-PageDown]=''            # terminal scroll
+
+key[A-Up]='^[[1;3A'
+key[A-Down]='^[[1;3B'
+key[A-Right]='^[[1;3C'
+key[A-Left]='^[[1;3D'
+key[A-Home]='^[[1;3H'
+key[A-End]='^[[1;3F'
+key[A-PageUp]='^[[5;3~'
+key[A-PageDown]='^[[6;3~'
+
+key[A-S-Up]='^[[1;4A'
+key[A-S-Down]='^[[1;4B'
+key[A-S-Right]='^[[1;4C'
+key[A-S-Left]='^[[1;4D'
+key[A-S-Home]='^[[1;4H'
+key[A-S-End]='^[[1;4F'
+# key[A-S-PageUp]=''            # same as A-PageUp
+# key[A-S-PageDown]=''          # same as A-PageDown
+
+key[C-Up]='^[[1;5A'
+key[C-Down]='^[[1;5B'
+key[C-Right]='^[[1;5C'
+key[C-Left]='^[[1;5D'
+key[C-Home]='^[[1;5H'
+key[C-End]='^[[1;5F'
+key[C-PageUp]='^[[5;5~'
+key[C-PageDown]='^[[6;5~'
+
+key[C-S-Up]='^[[1;6A'
+key[C-S-Down]='^[[1;6B'
+key[C-S-Right]='^[[1;6C'
+key[C-S-Left]='^[[1;6D'
+key[C-S-Home]='^[[1;6H'
+key[C-S-End]='^[[1;6F'
+# key[C-S-PageUp]=''            # same as C-PageUp
+# key[C-S-PageDown]=''          # same as C-PageDown
+
+key[C-A-Up]='^[[1;7A'
+key[C-A-Down]='^[[1;7B'
+key[C-A-Right]='^[[1;7C'
+key[C-A-Left]='^[[1;7D'
+key[C-A-Home]='^[[1;7H'
+key[C-A-End]='^[[1;7F'
+key[C-A-PageUp]='^[[5;7~'
+key[C-A-PageDown]='^[[6;7~'
+
+key[C-A-S-Up]='^[[1;8A'
+key[C-A-S-Down]='^[[1;8B'
+key[C-A-S-Right]='^[[1;8C'
+key[C-A-S-Left]='^[[1;8D'
+key[C-A-S-Home]='^[[1;8H'
+key[C-A-S-End]='^[[1;8F'
+# key[C-A-S-PageUp]=''          # same as C-A-PageUp
+# key[C-A-S-PageDown]=''        # same as C-A-PageDown
