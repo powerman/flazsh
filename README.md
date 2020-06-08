@@ -14,6 +14,7 @@ Remove `~/.zsh*`, then:
 ```
 echo 'ZDOTDIR=~/.zsh' > ~/.zshenv
 git clone https://github.com/powerman/flazsh ~/.zsh
+zsh -i -c 'fast-theme powerman'
 ```
 
 ## Theme
