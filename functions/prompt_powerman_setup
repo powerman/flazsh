@@ -64,7 +64,7 @@ function prompt_powerman_wcwidth_icons {
 			typeset -g $v=${(P)v:gs//…/}
 			typeset -g $v=${(P)v:gs//⚑/} # FIXME not in D2Coding font
 			# All double-width icons in Nerd Fonts.
-			typeset -g $v=${(P)v:gs/(#m)([⏻-⏾♥⚡⭘--])//}
+			typeset -g $v=${(P)v:gs/(#m)([-----龎--♥⚡--⏻-⏾⭘--])//}
 		done
 	fi
 	if [[ $TERM == linux ]]; then
@@ -77,7 +77,7 @@ function prompt_powerman_wcwidth_icons {
 	if [[ $LD_PRELOAD != *wcwidth-icons* ]]; then
 		for v in $(noglob typeset +m {,R}PROMPT{,<->} PROMPT_EOL_MARK ZSH_THEME_*); do
 			# All double-width icons in Nerd Fonts.
-			typeset -g $v=${(P)v:gs/(#m)([⏻-⏾♥⚡⭘--])/%{${MATCH}%2G%}/}
+			typeset -g $v=${(P)v:gs/(#m)([-----龎--♥⚡--⏻-⏾⭘--])/%{${MATCH}%2G%}/}
 		done
 	fi
 }
@@ -135,7 +135,7 @@ function prompt_powerman_setup {
 		parser_status   $pal[grey2]
 		no_eol          $pal[orange2]
 	)
-	local host="%20(V %F{$c[host]}%B%m%b%f➤ )"
+	local host="%20(V %F{$c[host]}%B%m%b%f➤ )"
 	local i_dir_ro="%1(V %F{$c[i_ro]} )"
 	local i_dir="%F{$c[i_dir]}%2(V  %3(V  %30(V  %31(V  %32(V  %34(V  %11(V  %10(V  %13(V  %12(V  %33(V  )))))))))))"
 	local dir="%4(~ %F{$c[dir_pfx]}%-2~%f…%B%F{$c[dir]}%1~%f%b %B%F{$c[dir]}%~%f%b)"
