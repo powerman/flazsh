@@ -328,6 +328,7 @@ cdpath=(
 	~DF
 	~MTM
 	~/proj/{inferno,js,css,vim,soft}/
+	~/proj/allcups
 )
 
 HISTFILE=${HISTFILE:#/dev/null}
@@ -452,6 +453,7 @@ alias grep='grep --colour=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
 alias egrep='egrep --colour=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
 alias fgrep='fgrep --colour=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
 
+alias gh='PAGER= gh'
 alias dc='if test -f env.sh; then source env.sh; fi && docker-compose'
 alias df='df -kh'
 alias emu-g='rlwrap -a -r ~/.local/bin/emu-g'
@@ -529,7 +531,7 @@ case $AUTORUN in
 	AUTORUN=$AUTORUN su -w AUTORUN,COLORTERM -
 	exit
 	;;
-(ssh[12])
+(ssh[1])
 	ssh -O exit root@${AUTORUN/ssh/srv}
 	ssh	    root@${AUTORUN/ssh/srv}
 	ping -c 180	 ${AUTORUN/ssh/srv}
