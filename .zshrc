@@ -464,13 +464,14 @@ alias mysql='mysql --pager="less -XSFe"'
 alias reboot='/sbin/runit-init 6'
 alias halt='/sbin/runit-init 0'
 
-if test -f /usr/share/grc/grc.zsh; then
-	source /usr/share/grc/grc.zsh
-elif test -f /etc/grc.zsh; then
-	source /etc/grc.zsh
-fi
-alias ls='ls --color=auto'  # disable grc because of https://github.com/garabik/grc/issues/144
-unalias make		    # disable grc because of https://github.com/garabik/grc/issues/123
+# if test -f /usr/share/grc/grc.zsh; then
+# 	source /usr/share/grc/grc.zsh
+# elif test -f /etc/grc.zsh; then
+# 	source /etc/grc.zsh
+# fi
+# unset -f ls
+# alias ls='ls --color=auto'  # disable grc because of https://github.com/garabik/grc/issues/144
+# unalias make		    # disable grc because of https://github.com/garabik/grc/issues/123
 
 # New commands.
 alias -- -='cd -'
