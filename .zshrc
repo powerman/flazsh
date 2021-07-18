@@ -316,6 +316,7 @@ hash -d Go=~/proj/go
 hash -d Perl=~/proj/perl
 hash -d Rajeev=~/proj/rajeev
 hash -d CPDPro=$GOPATH/src/github.com/dentalcpdpro
+hash -d MSTrade=~/proj/mstrade
 hash -d DF=~/proj/qarea/duefocus
 hash -d MTM=$GOPATH/src/github.com/mtgroupit
 
@@ -327,6 +328,7 @@ cdpath=(
 	~Perl
 	~Rajeev
 	~CPDPro
+	~MSTrade
 	~DF
 	~MTM
 	~/proj/{inferno,js,css,vim,soft}/
