@@ -125,6 +125,8 @@ fi
 
 optional=(
     ~/.local/bin/git-subrepo/.rc
+    ~/.local/share/google-cloud-sdk/completion.zsh.inc
+    ~/.local/share/google-cloud-sdk/path.zsh.inc
     ~/.secret.sh
 )
 for f in $optional; test -e "$f" && source "$f"
