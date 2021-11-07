@@ -501,7 +501,7 @@ fi
 function notify-remote {
 	ssh powerman@powerman.name sudo /etc/sv/notify/actions/notify-send "${(q)@}"
 }
-[[ $HOST == home ]] && alias alert=alert-local || alias alert=alert-remote
+[[ $HOST == home ]] && alias alert=alert-local || alias alert=alert-tg
 
 
 #---------------------------------------

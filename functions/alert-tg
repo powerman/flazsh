@@ -1,0 +1,20 @@
+# Use like so: sleep 10; alert
+local cmd_status=${${${?#0}:+❌}:-✅}
+local cmd="$({ fc -lIn -2 2>/dev/null; fc -lIn $HISTCMD } | sed 's/\(^\|;\)\s*alert\s*$//;/^$/d' | tail -n 1)"
+if [[ -z "${TG_POWERMAN_ALERT_BOT_TOKEN}" ]]; then
+    echo "Set TG_POWERMAN_ALERT_BOT_TOKEN in ~/.secret.sh" >&2
+    return 1
+fi
+local out # must not be combined with next line, otherwise code will be 0
+out="$(curl --no-progress-meter \
+    https://api.telegram.org/bot${TG_POWERMAN_ALERT_BOT_TOKEN}/sendMessage \
+    --data "chat_id=-1001760853066" \
+    --data "parse_mode=MarkdownV2" \
+    --data-urlencode "text=*$HOST* $cmd_status \`$(echo $cmd | sed -e "s/\([\\\`]\)/\\\\\\1/g")\`")"
+local code=$?
+if [[ "${code}" -eq 0 ]]; then
+    echo "$out" | grep -q '"ok":true' && return 0
+    echo "$out" >&2
+    return 1
+fi
+return $code
