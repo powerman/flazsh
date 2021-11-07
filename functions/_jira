@@ -1,24 +1,8 @@
-#compdef kubectl
-compdef _kubectl kubectl
+#compdef _jira jira
 
-# Copyright 2016 The Kubernetes Authors.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#compdef _kubectl kubectl
+# zsh completion for jira                                 -*- shell-script -*-
 
-# zsh completion for kubectl                              -*- shell-script -*-
-
-__kubectl_debug()
+__jira_debug()
 {
     local file="$BASH_COMP_DEBUG_FILE"
     if [[ -n ${file} ]]; then
@@ -26,7 +10,7 @@ __kubectl_debug()
     fi
 }
 
-_kubectl()
+_jira()
 {
     local shellCompDirectiveError=1
     local shellCompDirectiveNoSpace=2
@@ -37,21 +21,21 @@ _kubectl()
     local lastParam lastChar flagPrefix requestComp out directive compCount comp lastComp
     local -a completions
 
-    __kubectl_debug "\n========= starting completion logic =========="
-    __kubectl_debug "CURRENT: ${CURRENT}, words[*]: ${words[*]}"
+    __jira_debug "\n========= starting completion logic =========="
+    __jira_debug "CURRENT: ${CURRENT}, words[*]: ${words[*]}"
 
     # The user could have moved the cursor backwards on the command-line.
     # We need to trigger completion from the $CURRENT location, so we need
     # to truncate the command-line ($words) up to the $CURRENT location.
     # (We cannot use $CURSOR as its value does not work when a command is an alias.)
     words=("${=words[1,CURRENT]}")
-    __kubectl_debug "Truncated words[*]: ${words[*]},"
+    __jira_debug "Truncated words[*]: ${words[*]},"
 
     lastParam=${words[-1]}
     lastChar=${lastParam[-1]}
-    __kubectl_debug "lastParam: ${lastParam}, lastChar: ${lastChar}"
+    __jira_debug "lastParam: ${lastParam}, lastChar: ${lastChar}"
 
-    # For zsh, when completing a flag with an = (e.g., kubectl -n=<TAB>)
+    # For zsh, when completing a flag with an = (e.g., jira -n=<TAB>)
     # completions must be prefixed with the flag
     setopt local_options BASH_REMATCH
     if [[ "${lastParam}" =~ '-.*=' ]]; then
@@ -64,22 +48,22 @@ _kubectl()
     if [ "${lastChar}" = "" ]; then
         # If the last parameter is complete (there is a space following it)
         # We add an extra empty parameter so we can indicate this to the go completion code.
-        __kubectl_debug "Adding extra empty parameter"
+        __jira_debug "Adding extra empty parameter"
         requestComp="${requestComp} \"\""
     fi
 
-    __kubectl_debug "About to call: eval ${requestComp}"
+    __jira_debug "About to call: eval ${requestComp}"
 
     # Use eval to handle any environment variables and such
     out=$(eval ${requestComp} 2>/dev/null)
-    __kubectl_debug "completion output: ${out}"
+    __jira_debug "completion output: ${out}"
 
     # Extract the directive integer following a : from the last line
     local lastLine
     while IFS='\n' read -r line; do
         lastLine=${line}
     done < <(printf "%s\n" "${out[@]}")
-    __kubectl_debug "last line: ${lastLine}"
+    __jira_debug "last line: ${lastLine}"
 
     if [ "${lastLine[1]}" = : ]; then
         directive=${lastLine[2,-1]}
@@ -89,16 +73,16 @@ _kubectl()
         out=${out[1,-$suffix]}
     else
         # There is no directive specified.  Leave $out as is.
-        __kubectl_debug "No directive found.  Setting do default"
+        __jira_debug "No directive found.  Setting do default"
         directive=0
     fi
 
-    __kubectl_debug "directive: ${directive}"
-    __kubectl_debug "completions: ${out}"
-    __kubectl_debug "flagPrefix: ${flagPrefix}"
+    __jira_debug "directive: ${directive}"
+    __jira_debug "completions: ${out}"
+    __jira_debug "flagPrefix: ${flagPrefix}"
 
     if [ $((directive & shellCompDirectiveError)) -ne 0 ]; then
-        __kubectl_debug "Completion received error. Ignoring completions."
+        __jira_debug "Completion received error. Ignoring completions."
         return
     fi
 
@@ -115,7 +99,7 @@ _kubectl()
             comp=${comp//$tab/:}
 
             ((compCount++))
-            __kubectl_debug "Adding completion: ${comp}"
+            __jira_debug "Adding completion: ${comp}"
             completions+=${comp}
             lastComp=$comp
         fi
@@ -134,17 +118,17 @@ _kubectl()
         done
         filteringCmd+=" ${flagPrefix}"
 
-        __kubectl_debug "File filtering command: $filteringCmd"
+        __jira_debug "File filtering command: $filteringCmd"
         _arguments '*:filename:'"$filteringCmd"
     elif [ $((directive & shellCompDirectiveFilterDirs)) -ne 0 ]; then
         # File completion for directories only
         local subDir
         subdir="${completions[1]}"
         if [ -n "$subdir" ]; then
-            __kubectl_debug "Listing directories in $subdir"
+            __jira_debug "Listing directories in $subdir"
             pushd "${subdir}" >/dev/null 2>&1
         else
-            __kubectl_debug "Listing directories in ."
+            __jira_debug "Listing directories in ."
         fi
 
         _arguments '*:dirname:_files -/'" ${flagPrefix}"
@@ -152,16 +136,16 @@ _kubectl()
             popd >/dev/null 2>&1
         fi
     elif [ $((directive & shellCompDirectiveNoSpace)) -ne 0 ] && [ ${compCount} -eq 1 ]; then
-        __kubectl_debug "Activating nospace."
+        __jira_debug "Activating nospace."
         # We can use compadd here as there is no description when
         # there is only one completion.
         compadd -S '' "${lastComp}"
     elif [ ${compCount} -eq 0 ]; then
         if [ $((directive & shellCompDirectiveNoFileComp)) -ne 0 ]; then
-            __kubectl_debug "deactivating file completion"
+            __jira_debug "deactivating file completion"
         else
             # Perform file completion
-            __kubectl_debug "activating file completion"
+            __jira_debug "activating file completion"
             _arguments '*:filename:_files'" ${flagPrefix}"
         fi
     else
@@ -170,6 +154,6 @@ _kubectl()
 }
 
 # don't run the completion function when being source-ed or eval-ed
-if [ "$funcstack[1]" = "_kubectl" ]; then
-	_kubectl
+if [ "$funcstack[1]" = "_jira" ]; then
+	_jira
 fi
