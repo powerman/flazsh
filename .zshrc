@@ -342,7 +342,7 @@ SAVEHIST=$HISTSIZE
 
 DIRSTACKSIZE=20				# ограничить размер стека pushd
 READNULLCMD=less			# <file вместо less file
-RANDOM=$(print -P "%D{%s%.}$$")		# seed RNG
+RANDOM=$(print -P "%19<<%D{%s%.}$$")	# seed RNG
 
 
 #---------------------------------------
