@@ -540,6 +540,12 @@ case $AUTORUN in
 	ping -c 180	 ${AUTORUN/ssh/srv}
 	exit
 	;;
+(ssh2)
+	ssh -O exit root@primary.powerman.name
+	ssh	    root@primary.powerman.name
+	ping -c 180	 primary.powerman.name
+	exit
+	;;
 (ssh3)
 	ssh -O exit root@web.powerman.name
 	ssh	    root@web.powerman.name
