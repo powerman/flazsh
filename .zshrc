@@ -456,7 +456,7 @@ alias egrep='egrep --colour=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
 alias fgrep='fgrep --colour=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
 
 alias gh='PAGER= gh'
-alias dc='if test -f env.sh; then source env.sh; fi && docker-compose'
+alias dc='if test -f env.sh; then source env.sh; fi && docker compose'
 alias df='df -kh'
 alias emu-g='rlwrap -a -r ~/.local/bin/emu-g'
 alias goconvey='goconvey -port=8192 -launchBrowser=false -timeout=20s -excludedDirs=vendor,testdata,bin,service,public,template'
