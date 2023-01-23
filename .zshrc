@@ -463,8 +463,10 @@ alias goconvey='goconvey -port=8192 -launchBrowser=false -timeout=20s -excludedD
 alias lynx='lynx -nopause'
 alias mod=~/go/bin/mod # prefer over mono's /usr/bin/mod
 alias mysql='mysql --pager="less -XSFe"'
-alias reboot='/sbin/runit-init 6'
-alias halt='/sbin/runit-init 0'
+if test -x /sbin/runit-init && ! readlink /sbin/init | grep -q systemd; then
+    alias reboot='/sbin/runit-init 6'
+    alias halt='/sbin/runit-init 0'
+fi
 
 # if test -f /usr/share/grc/grc.zsh; then
 # 	source /usr/share/grc/grc.zsh
