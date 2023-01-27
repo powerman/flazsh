@@ -468,15 +468,6 @@ if test -x /sbin/runit-init && ! readlink /sbin/init | grep -q systemd; then
     alias halt='/sbin/runit-init 0'
 fi
 
-# if test -f /usr/share/grc/grc.zsh; then
-# 	source /usr/share/grc/grc.zsh
-# elif test -f /etc/grc.zsh; then
-# 	source /etc/grc.zsh
-# fi
-# unset -f ls
-# alias ls='ls --color=auto'  # disable grc because of https://github.com/garabik/grc/issues/144
-# unalias make		    # disable grc because of https://github.com/garabik/grc/issues/123
-
 # New commands.
 alias -- -='cd -'
 alias ...='../..'
@@ -486,8 +477,6 @@ alias l="$(whence ls) -l --group-directories-first"
 alias la="$(whence ls) -lA --group-directories-first"
 alias lt="$(whence ls) -ltr --group-directories-first"
 alias lu="$(whence la) -Sr"
-alias logc='grc cat'
-alias logt='grc tail'
 alias mplayerstream='/usr/bin/mplayer -cache 128 -cache-min 50 -playlist'
 
 if [[ $EUID = 0 ]] || [[ $USER = root ]]; then
