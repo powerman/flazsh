@@ -548,10 +548,4 @@ case $AUTORUN in
 	ping -c 180	 primary.powerman.name
 	exit
 	;;
-(ssh3)
-	ssh -O exit root@web.powerman.name
-	ssh	    root@web.powerman.name
-	ping -c 180	 web.powerman.name
-	exit
-	;;
 esac
