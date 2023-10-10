@@ -525,16 +525,16 @@ case $AUTORUN in
 	AUTORUN=$AUTORUN su -w AUTORUN,COLORTERM -
 	exit
 	;;
-(ssh[1])
-	ssh -O exit root@${AUTORUN/ssh/srv}
-	ssh	    root@${AUTORUN/ssh/srv}
-	ping -c 180	 ${AUTORUN/ssh/srv}
+(ssh1)
+	ssh -O exit root@primary
+	ssh	    root@primary
+	ping -c 180	 primary
 	exit
 	;;
 (ssh2)
-	ssh -O exit root@primary.powerman.name
-	ssh	    root@primary.powerman.name
-	ping -c 180	 primary.powerman.name
+	ssh -O exit root@secondary.powerman.name
+	ssh	    root@secondary.powerman.name
+	ping -c 180	 secondary.powerman.name
 	exit
 	;;
 esac
