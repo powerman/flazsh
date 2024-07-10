@@ -1,12 +1,12 @@
 ########################################
-#		FLAzSH!			
-#    Fastest ZSH you've ever seen.	
-#					
+#		FLAzSH!
+#    Fastest ZSH you've ever seen.
+#
 
 
 #---------------------------------------
-# ZSH Cool Features                     
-#                                       
+# ZSH Cool Features
+#
 # cd <old> <new>		# s/<old>/<new>/ в текущем `pwd`
 # $PWD				# всегда равен `pwd`
 # $path				# работа с $PATH как с массивом
@@ -41,8 +41,8 @@
 
 
 #---------------------------------------
-# Особенности (с текущим набором опций) 
-#                                       
+# Особенности (с текущим набором опций)
+#
 # - Не поддерживает /etc/inputrc, поэтому нужны zkbd/bindkey.
 # - Имена опций:
 #   * Регистр и подчёркивания не важны: autocd / AUTO_CD.
@@ -91,8 +91,8 @@
 
 
 #---------------------------------------
-# Global Parameters and Configuration	
-#					
+# Global Parameters and Configuration
+#
 # - Переменные окружения и параметры, которые должны быть установлены до
 #   запуска любой команды/плагина, т.к. они могут повлиять на их работу.
 #   Если какой-то плагин их изменит нежелательным образом - нужно вернуть
@@ -115,6 +115,7 @@ else
 		~/node_modules/.bin/
 		~/.gem/ruby/*/bin(N[-1])	# корректнее, но медленнее: $(gem env gemdir)/bin
 	)
+	[ -f ~/.ghcup/env ] && source ~/.ghcup/env
 	export INFERNO_HOME=~/inferno/
 	# Вывод: perl -I ~/perl5/lib/perl5/ -Mlocal::lib
 	export PERL_MB_OPT="--install_base $HOME/perl5"
@@ -152,8 +153,8 @@ ZSH_DATA_DIR=${XDG_DATA_HOME:-~/.local/share}/zsh
 
 
 #---------------------------------------
-# Load plugins				
-#					
+# Load plugins
+#
 # - До загрузки функций/плагинов нужно настроить $FPATH.
 #   В нём должны быть каталоги с функциями для autoload и настройками
 #   completions (файлы "_*").
@@ -236,8 +237,8 @@ zzcompile $BUNDLE/fast-syntax-highlighting/fast-highlight
 
 
 #---------------------------------------
-# ZSH Parameters and Options		
-#					
+# ZSH Parameters and Options
+#
 unsetopt BG_NICE			# запускать фоновые задачи без nice
 unsetopt CORRECT			# без коррекции для команд
 unsetopt FLOW_CONTROL			# Ctrl-S/Ctrl-Q обычные при вводе команды
@@ -344,8 +345,8 @@ RANDOM=$(print -P "%19<<%D{%s%.}$$")	# seed RNG
 
 
 #---------------------------------------
-# Theme					
-#					
+# Theme
+#
 palette256
 
 # TIMEFMT=$'\nreal\t%*E\nuser\t%*U\nsys\t%*S'	  # time в стиле bash
@@ -359,8 +360,8 @@ prompt powerman
 
 
 #---------------------------------------
-# Key bindings				
-#					
+# Key bindings
+#
 autoload -Uz zkbd
 [[ ! -f $ZDOTDIR/.zkbd/$TERM-${${DISPLAY:t}:-$VENDOR-$OSTYPE} ]] && zkbd
 source	$ZDOTDIR/.zkbd/$TERM-${${DISPLAY:t}:-$VENDOR-$OSTYPE}
@@ -415,8 +416,8 @@ zbindkey -M menuselect	'^O'			accept-and-infer-next-history
 
 
 #---------------------------------------
-# Functions and Aliases			
-#					
+# Functions and Aliases
+#
 alias -s {pdf,gif,png,jpg,mkv,avi,htm,html,doc,odt,xls,ods,odg}='xdg-open'
 alias -s {txt,md,adoc,asciidoc}='vi'
 
@@ -463,6 +464,7 @@ alias goconvey='goconvey -port=8192 -launchBrowser=false -timeout=20s -excludedD
 alias lynx='lynx -nopause'
 alias mod=~/go/bin/mod # prefer over mono's /usr/bin/mod
 alias mysql='mysql --pager="less -XSFe"'
+alias sg=ast-grep # prefer over shadow's /usr/bin/sg
 if test -x /sbin/runit-init && ! readlink /sbin/init | grep -q systemd; then
     alias reboot='/sbin/runit-init 6'
     alias halt='/sbin/runit-init 0'
@@ -496,8 +498,8 @@ function notify-remote {
 
 
 #---------------------------------------
-# AutoRun				
-#					
+# AutoRun
+#
 unexport AUTORUN
 if [[ $EUID = 0 ]] || [[ $USER = root ]]; then
 	unset AUTORUN
