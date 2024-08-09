@@ -125,8 +125,8 @@ else
 fi
 
 optional=(
-    ~/.local/bin/git-subrepo/.rc
-    ~/.secret.sh
+	~/.local/bin/git-subrepo/.rc
+	~/.secret.sh
 )
 for f in $optional; test -e "$f" && source "$f"
 
@@ -213,11 +213,11 @@ autoload -Uz zcalc-auto-insert
 zle -N zcalc-auto-insert		# автовставка "ans" перед знаком в zcalc
 
 function expand-or-complete-with-indicator() {
-    print -Pn "%{%F{red}…%f%}"
-    zle expand-or-complete
-    local exit_status=$?
-    zle redisplay
-    return $exit_status
+	print -Pn "%{%F{red}…%f%}"
+	zle expand-or-complete
+	local exit_status=$?
+	zle redisplay
+	return $exit_status
 }
 zle -N expand-or-complete-with-indicator
 
@@ -466,8 +466,8 @@ alias mod=~/go/bin/mod # prefer over mono's /usr/bin/mod
 alias mysql='mysql --pager="less -XSFe"'
 alias sg=ast-grep # prefer over shadow's /usr/bin/sg
 if test -x /sbin/runit-init && ! readlink /sbin/init | grep -q systemd; then
-    alias reboot='/sbin/runit-init 6'
-    alias halt='/sbin/runit-init 0'
+	alias reboot='/sbin/runit-init 6'
+	alias halt='/sbin/runit-init 0'
 fi
 
 # New commands.
