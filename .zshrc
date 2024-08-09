@@ -483,6 +483,42 @@ alias lt="$(whence ls) -ltr --group-directories-first"
 alias lu="$(whence la) -Sr"
 alias mplayerstream='/usr/bin/mplayer -cache 128 -cache-min 50 -playlist'
 
+# Usage:
+#   $ <Ctrl-R>              # fuzzy search command history
+#   $ <Alt-C>               # fuzzy `cd` subdirectory
+#   $ ls -ld <Ctrl-T>       # insert file/dir names (<Tab> to multiselect) into command line
+#   $ vi /tmp/**<Tab>       # insert file/dir names (<Tab> to multiselect) into command line
+#   $ kill **<Tab>          # insert PIDs (<Tab> to multiselect) into command line
+#   $ ssh **<Tab>           # insert host name
+#   $ export **<Tab>        # insert env vars (<Tab> to multiselect) into command line
+#   $ unalias **<Tab>       # insert shell's alias name
+#   $ rgf 'regex'           # advanced version of `rg | fzf | vi`
+source <(fzf --zsh)
+# Speedup `fzf` file lookups using `fd`.
+export FZF_DEFAULT_COMMAND='fd --hidden --no-ignore-vcs --color=always --type file'
+export FZF_ALT_C_COMMAND='fd --hidden --no-ignore-vcs --color=always --type directory'
+export FZF_CTRL_T_COMMAND='fd --hidden --no-ignore-vcs --color=always --type file --type directory'
+export FZF_DEFAULT_OPTS='--ansi --bind ctrl-\\:abort --border --height 70%'
+_fzf_compgen_path() {
+	fd --hidden --no-ignore-vcs --color=always --type file --type directory . "$1"
+}
+_fzf_compgen_dir() {
+	fd --hidden --no-ignore-vcs --color=always --type directory . "$1"
+}
+rgf() (
+	RELOAD='reload:rg --column --color=always --smart-case --line-number --no-heading -- {q} | perl -pe "s/\\n/\\0/; s/^([^:]+:)\{3}/\$&\\n  /" || :'
+	OPENER='vi {1} +{2}'
+	fzf --read0 --highlight-line --disabled --ansi --height 100% --layout reverse \
+		--bind "start:$RELOAD" --bind "change:$RELOAD" \
+		--bind "enter:become:$OPENER" \
+		--bind "ctrl-o:execute:$OPENER" \
+		--bind 'ctrl-/:toggle-preview' \
+		--delimiter : \
+		--preview 'bat --style=default --color=always --highlight-line {2} {1}' \
+		--preview-window '+{2}/3,<80(down)' \
+		--query "$*"
+)
+
 if [[ $EUID = 0 ]] || [[ $USER = root ]]; then
 	if xuser; then
 		chpst -u "$XUSER" mkdir -p "$XHOME/.local/share/env"
