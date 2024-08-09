@@ -103,11 +103,13 @@ typeset -U path
 if [[ $EUID = 0 ]] || [[ $USER = root ]]; then
 	path=(
 		~/.local/bin
+		~/.local/share/nvim/mason/bin
 		$path
 	)
 else
 	path=(
 		~/.local/bin
+		~/.local/share/nvim/mason/bin
 		/mnt/storage/games/bin/
 		$path
 		$GOPATH/bin
