@@ -141,6 +141,10 @@ export QT_SELECT='qt5'
 test -f ~/.config/ripgreprc && export RIPGREP_CONFIG_PATH=~/.config/ripgreprc
 eval "$(dircolors -b ~/.dir_colors(N))"
 
+# See /usr/share/bash-completion/completions/git
+export GIT_COMPLETION_CHECKOUT_NO_GUESS=1
+export GIT_COMPLETION_SHOW_ALL=1
+
 export ECHANGELOG_USER='Alex Efros (powerman) <powerman-asdf@ya.ru>'
 export NARADA_USER='Alex Efros <powerman@powerman.name>'
 export PERLDOC='-otext'
@@ -150,6 +154,11 @@ export LESS='-R -M --shift 5 -S'
 export MISE_LOG_FILE=~/.local/share/mise.log
 export MISE_LOG_FILE_LEVEL=info
 [[ $EMU == -c* || $EMU == *\ -c* ]] || EMU+=' -c1'
+
+# Rootless docker.
+if ! [[ $EUID = 0 || $USER = root ]]; then
+	export DOCKER_HOST=${DOCKER_HOST:-unix://${XDG_RUNTIME_DIR}/docker.sock}
+fi
 
 ZSH_CACHE_DIR=${XDG_CACHE_HOME:-~/.cache}/zsh
 ZSH_DATA_DIR=${XDG_DATA_HOME:-~/.local/share}/zsh
@@ -579,7 +588,7 @@ case $AUTORUN in
 	;;
 (root*)
 #	sudo -i LD_PRELOAD=$LD_PRELOAD AUTORUN=$AUTORUN
-	AUTORUN=$AUTORUN su -w AUTORUN,COLORTERM -
+	AUTORUN=$AUTORUN su -w AUTORUN,COLORTERM,COLORFGBG -
 	exit
 	;;
 (ssh1)
