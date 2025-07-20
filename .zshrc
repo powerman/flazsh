@@ -243,12 +243,14 @@ zsource $OMZ/../lib/spectrum.zsh	# more cool colors
 zsource $OMZ/../lib/termsupport.zsh	# update term/screen title
 zsource $OMZ/dircycle/*.plugin.zsh	# Ctrl-Shift-Left|Right to navigate on pushd stack
 # zsource $PREZTO/prompt/init.zsh
-if [[ -n "$CURSOR_TRACE_ID" ]] then
-	eval "$(mise activate zsh | sed 's/command mise/env mise/')" # Fixes Cursor AppImage ARGV[0] issue.
-else
-	eval "$(mise activate zsh)"
+if command -v mise >/dev/null; then
+	if [[ -n "$CURSOR_TRACE_ID" ]] then
+		eval "$(mise activate zsh | sed 's/command mise/env mise/')" # Fixes Cursor AppImage ARGV[0] issue.
+	else
+		eval "$(mise activate zsh)"
+	fi
+	zsource $BUNDLE/mise-optimize-hook # Patch for `mise activate zsh`.
 fi
-zsource $BUNDLE/mise-optimize-hook # Patch for `mise activate zsh`.
 
 # Нужно загружать после добавления всех виджетов ZLE.
 zsource $BUNDLE/fast-syntax-highlighting/*.plugin.zsh
@@ -442,8 +444,10 @@ zbindkey -M menuselect	'^O'			accept-and-infer-next-history
 #
 
 # Mise in shims mode for some apps.
-if [[ "$AUTORUN" == "mc" ]]; then
-	prepend_new_path ~/.local/share/mise/shims
+if command -v mise >/dev/null; then
+	if [[ "$AUTORUN" == "mc" ]]; then
+		prepend_new_path ~/.local/share/mise/shims
+	fi
 fi
 
 
