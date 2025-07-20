@@ -498,6 +498,7 @@ alias lynx='lynx -nopause'
 alias mod=~/go/bin/mod # prefer over mono's /usr/bin/mod
 alias mysql='mysql --pager="less -XSFe"'
 alias sg=ast-grep # prefer over shadow's /usr/bin/sg
+alias ncdu="ncdu -t $(nproc)"
 if test -x /sbin/runit-init && ! readlink /sbin/init | grep -q systemd; then
 	alias reboot='/sbin/runit-init 6'
 	alias halt='/sbin/runit-init 0'
@@ -542,6 +543,7 @@ rgf() (
 	fzf --read0 --highlight-line --disabled --ansi --height 100% --layout reverse \
 		--bind "start:$RELOAD" --bind "change:$RELOAD" \
 		--bind "enter:become:$OPENER" \
+		--bind "alt-e:execute:$OPENER" \
 		--bind "ctrl-o:execute:$OPENER" \
 		--bind 'ctrl-/:toggle-preview' \
 		--delimiter : \
@@ -549,6 +551,7 @@ rgf() (
 		--preview-window '+{2}/3,<80(down)' \
 		--query "$*"
 )
+alias tlf='tldr --list | fzf --preview "tldr {1} --color=always" --preview-window=right,70% | xargs -r tldr'
 
 if [[ $EUID = 0 ]] || [[ $USER = root ]]; then
 	if xuser; then
