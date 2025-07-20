@@ -130,10 +130,10 @@ else
 fi
 
 optional=(
-	~/.local/bin/git-subrepo/.rc
+	~/.local/share/mise/installs/git-subrepo/latest/bin/.rc
 	~/.secret.sh
 )
-for f in $optional; test -e "$f" && source "$f"
+for f in $optional; do test -e "$f" && source "$f"; done
 
 export BROWSER=xdg-open
 export GPG_TTY=$TTY
@@ -147,6 +147,8 @@ export PERLDOC='-otext'
 export TEST_AUTHOR=1
 export GO_TEST_COLOR=1
 export LESS='-R -M --shift 5 -S'
+export MISE_LOG_FILE=~/.local/share/mise.log
+export MISE_LOG_FILE_LEVEL=info
 [[ $EMU == -c* || $EMU == *\ -c* ]] || EMU+=' -c1'
 
 ZSH_CACHE_DIR=${XDG_CACHE_HOME:-~/.cache}/zsh
@@ -232,6 +234,12 @@ zsource $OMZ/../lib/spectrum.zsh	# more cool colors
 zsource $OMZ/../lib/termsupport.zsh	# update term/screen title
 zsource $OMZ/dircycle/*.plugin.zsh	# Ctrl-Shift-Left|Right to navigate on pushd stack
 # zsource $PREZTO/prompt/init.zsh
+if [[ -n "$CURSOR_TRACE_ID" ]] then
+	eval "$(mise activate zsh | sed 's/command mise/env mise/')" # Fixes Cursor AppImage ARGV[0] issue.
+else
+	eval "$(mise activate zsh)"
+fi
+zsource $BUNDLE/mise-optimize-hook # Patch for `mise activate zsh`.
 
 # Нужно загружать после добавления всех виджетов ZLE.
 zsource $BUNDLE/fast-syntax-highlighting/*.plugin.zsh
@@ -416,6 +424,16 @@ zbindkey -M menuselect	'^O'			accept-and-infer-next-history
 
 
 #---------------------------------------
+# PATH modifications which must be last.
+#
+
+# Mise in shims mode for some apps.
+if [[ "$AUTORUN" == "mc" ]]; then
+	prepend_new_path ~/.local/share/mise/shims
+fi
+
+
+#---------------------------------------
 # Functions and Aliases
 #
 alias -s {pdf,gif,png,jpg,mkv,avi,htm,html,doc,odt,xls,ods,odg}='xdg-open'
@@ -459,6 +477,7 @@ alias fgrep='fgrep --colour=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
 alias gh='PAGER= gh'
 alias dc='if test -f env.sh; then source env.sh; fi && docker compose'
 alias df='df -kh'
+alias mr='mise run'
 alias emu-g='rlwrap -a -r ~/.local/bin/emu-g'
 alias goconvey='goconvey -port=8192 -launchBrowser=false -timeout=20s -excludedDirs=vendor,testdata,bin,service,public,template'
 alias lynx='lynx -nopause'
