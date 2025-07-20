@@ -98,20 +98,23 @@
 #   Если какой-то плагин их изменит нежелательным образом - нужно вернуть
 #   исходное значение сразу после загрузки этого плагина.
 # - Настройки плагинов, которые необходимо установить перед их загрузкой.
-GOPATH=$(go env GOPATH 2>/dev/null || echo ~/go)
+GOPATH=$(go env GOPATH)
+
 typeset -U path
+prepend_new_path() {
+	if [[ -z "${path[(r)$1]}" ]]; then
+		path=("$1" $path)
+	fi
+}
+
 if [[ $EUID = 0 ]] || [[ $USER = root ]]; then
-	path=(
-		~/.local/bin
-		~/.local/share/nvim/mason/bin
-		$path
-	)
+	prepend_new_path ~/.local/bin
+	prepend_new_path ~/.local/share/nvim/mason/bin
 else
-	path=(
-		~/.local/bin
-		~/.local/share/nvim/mason/bin
-		/mnt/storage/games/bin/
-		$path
+	prepend_new_path ~/.local/bin
+	prepend_new_path ~/.local/share/nvim/mason/bin
+	prepend_new_path /mnt/storage/games/bin/
+	path+=(
 		$GOPATH/bin
 		~/perl5/bin/
 		~/node_modules/.bin/
@@ -313,27 +316,22 @@ zstyle ':completion:*:manuals'	                separate-sections	true
 
 
 # Named directories для сокращённого $PROMPT и cd.
+hash -d Neovim=~/.config/nvim
+hash -d Neovim-lazy=~/.local/share/nvim/lazy
 hash -d Go=~/proj/go
-hash -d Perl=~/proj/perl
-hash -d Rajeev=~/proj/rajeev
-hash -d CPDPro=$GOPATH/src/github.com/dentalcpdpro
-hash -d MSTrade=~/proj/mstrade
-hash -d DF=~/proj/qarea/duefocus
-hash -d MTM=$GOPATH/src/github.com/mtgroupit
+hash -d Vim=~/proj/vim
+hash -d Soft=~/proj/soft
+hash -d Infra=~/proj/infra
+hash -d Conf=~/work/pk-golang-conf/2025
+hash -d MSTrade=~/work/mstrade
 
 cdpath=(
 	.
 	..
 	~
-	~Go
-	~Perl
-	~Rajeev
-	~CPDPro
+	~/proj/{go,vim,config,deb}
+	~/fork/go
 	~MSTrade
-	~DF
-	~MTM
-	~/proj/{inferno,js,css,vim,soft}/
-	~/proj/allcups
 )
 
 HISTFILE=${HISTFILE:#/dev/null}
