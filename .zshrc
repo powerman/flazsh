@@ -373,7 +373,12 @@ TIMEFMT=${(%):-$'\n'"%B%F{$pal[yellow2]}%%*E real%f%b  %F{$pal[green1]}%%*U user
 
 # source $OMZ/../themes/robbyrussell.zsh-theme
 # prompt gentoo
-prompt powerman
+if [[ "$TERM_PROGRAM" = "vscode" || "$ZED_TERM" = "true" ]] then
+	[[ -d .buildcache/bin ]] && prepend_new_path $PWD/.buildcache/bin
+	prompt off # Fix VSCode Terminal wide icons issue.
+else
+	prompt powerman
+fi
 
 
 #---------------------------------------
