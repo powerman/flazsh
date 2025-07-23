@@ -1,4 +1,4 @@
-read XUSER DISPLAY _ <<<"$(w -f | grep ':[0-9][.]' | head -n 1)"
+read XUSER _ DISPLAY _ <<<"$(w -f | grep ':[0-9][. ]' | head -n 1)"
 export XUSER DISPLAY
 export XHOME="$(grep "^${XUSER}:" /etc/passwd | cut -d: -f 6)"
 [ -n "$XUSER" ] && [ -n "$DISPLAY" ] && [ -d "$XHOME" ]
