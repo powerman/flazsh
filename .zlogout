@@ -8,6 +8,7 @@ if [[ $EUID = 0 ]] || [[ $USER = root ]]; then
 fi
 if [[ $TERM == rxvt* && -n $AUTORUN ]]; then
 	# Start new terminal with initial environment of current one.
+	unset chpwd_functions # no mise in $PATH
 	cd
 	env -i $env urxvtc -name $AUTORUN
 fi
