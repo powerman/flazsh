@@ -98,7 +98,7 @@
 #   Если какой-то плагин их изменит нежелательным образом - нужно вернуть
 #   исходное значение сразу после загрузки этого плагина.
 # - Настройки плагинов, которые необходимо установить перед их загрузкой.
-GOPATH=$(go env GOPATH)
+command -v go >/dev/null && GOPATH=$(go env GOPATH)
 
 typeset -U path
 prepend_new_path() {
@@ -532,7 +532,7 @@ alias mplayerstream='/usr/bin/mplayer -cache 128 -cache-min 50 -playlist'
 #   $ export **<Tab>        # insert env vars (<Tab> to multiselect) into command line
 #   $ unalias **<Tab>       # insert shell's alias name
 #   $ rgf 'regex'           # advanced version of `rg | fzf | vi`
-source <(fzf --zsh)
+command -v fzf >/dev/null && source <(fzf --zsh)
 # Speedup `fzf` file lookups using `fd`.
 export FZF_DEFAULT_COMMAND='fd --hidden --no-ignore-vcs --color=always --type file'
 export FZF_ALT_C_COMMAND='fd --hidden --no-ignore-vcs --color=always --type directory'
