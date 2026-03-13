@@ -116,12 +116,16 @@ else
 	prepend_new_path /mnt/storage/games/bin/
 	path+=(
 		$GOPATH/bin
+		~/.luarocks/bin
 		~/perl5/bin/
 		~/node_modules/.bin/
 		~/.gem/ruby/*/bin(N[-1])	# корректнее, но медленнее: $(gem env gemdir)/bin
 	)
 	[ -f ~/.ghcup/env ] && source ~/.ghcup/env
 	export INFERNO_HOME=~/inferno/
+	# Вывод: luarocks path | grep LUA
+	export LUA_PATH='/usr/share/lua/5.1/?.lua;./?.lua;/usr/share/lua/5.1/?/init.lua;/usr/lib64/lua/5.1/?.lua;/usr/lib64/lua/5.1/?/init.lua;/home/powerman/.luarocks/share/lua/5.1/?.lua;/home/powerman/.luarocks/share/lua/5.1/?/init.lua'
+	export LUA_CPATH='./?.so;/usr/lib64/lua/5.1/?.so;/usr/lib64/lua/5.1/loadall.so;/home/powerman/.luarocks/lib/lua/5.1/?.so;/usr/lib/lua/5.1/?.so'
 	# Вывод: perl -I ~/perl5/lib/perl5/ -Mlocal::lib
 	export PERL_MB_OPT="--install_base $HOME/perl5"
 	export PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"
