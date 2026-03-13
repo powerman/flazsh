@@ -594,8 +594,9 @@ case $AUTORUN in
 	;;
 (rtorrent)
 	unset HISTFILE
-	sudo -u _torrent killall "rtorrent main" 2>/dev/null
-	sudo -u _torrent rtorrent
+	killall "rtorrent main" 2>/dev/null
+	pidof rtorrent >/dev/null || rm -f ~/.rtorrent/rtorrent.lock
+	firejail --quiet --name=rtorrent --netns=route-no-vpn rtorrent
 	;;
 (log)
 	sudo tail -F /var/log/all/current
