@@ -3,7 +3,7 @@
 typeset -g _mise_skip_next_precmd
 
 _mise_fast_chpwd() {
-    _mise_hook
+    _mise_hook_chpwd
     _mise_skip_next_precmd=1
 }
 
@@ -12,14 +12,14 @@ _mise_fast_chpwd() {
 # - that command hasn't changed current directory (and thus already triggered chpwd hook)
 _mise_fast_precmd() {
     if [[ -n "$ZLAST_COMMANDS" && -z "$_mise_skip_next_precmd" ]]; then
-        _mise_hook
+        _mise_hook_precmd
     fi
     _mise_skip_next_precmd=
 }
 
 # Remove original hooks.
-chpwd_functions=( "${(@)chpwd_functions:#_mise_hook}" )
-precmd_functions=( "${(@)precmd_functions:#_mise_hook}" )
+chpwd_functions=( "${(@)chpwd_functions:#_mise_hook_chpwd}" )
+precmd_functions=( "${(@)precmd_functions:#_mise_hook_precmd}" )
 # Safely add new hooks.
 chpwd_functions=( _mise_fast_chpwd "${(@)chpwd_functions:#_mise_fast_chpwd}" )
 precmd_functions=( _mise_fast_precmd "${(@)precmd_functions:#_mise_fast_precmd}" )
