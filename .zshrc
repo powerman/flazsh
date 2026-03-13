@@ -139,9 +139,10 @@ optional=(
 )
 for f in $optional; do test -e "$f" && source "$f"; done
 
+export SVDIR="$HOME/.config/runsvdir/current"
 export BROWSER=xdg-open
 export GPG_TTY=$TTY
-export QT_SELECT='qt5'
+# export QT_SELECT='qt5'
 test -f ~/.config/ripgreprc && export RIPGREP_CONFIG_PATH=~/.config/ripgreprc
 eval "$(dircolors -b ~/.dir_colors(N))"
 
@@ -343,8 +344,7 @@ hash -d Neovim-lazy=~/.local/share/nvim/lazy
 hash -d Go=~/proj/go
 hash -d Vim=~/proj/vim
 hash -d Soft=~/proj/soft
-hash -d Infra=~/proj/infra
-hash -d Conf=~/work/pk-golang-conf/2025
+hash -d Conf=~/work/pk-golang-conf/current
 hash -d MSTrade=~/work/mstrade
 
 cdpath=(
