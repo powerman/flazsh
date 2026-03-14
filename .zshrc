@@ -608,9 +608,9 @@ case $AUTORUN in
 	exit
 	;;
 (ssh1)
-	ssh -O exit root@primary
-	ssh	    root@primary
-	ping -c 180	 primary
+	ssh -O exit root@primary.powerman.name
+	ssh	    root@primary.powerman.name
+	ping -c 180	 primary.powerman.name
 	exit
 	;;
 (ssh2)
