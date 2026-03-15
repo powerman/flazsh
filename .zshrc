@@ -158,6 +158,7 @@ export PERLDOC='-otext'
 export TEST_AUTHOR=1
 export GO_TEST_COLOR=1
 export LESS='-R -M --shift 5 -S'
+export MTR_OPTIONS='-t'
 export MISE_LOG_FILE=~/.local/share/mise.log
 export MISE_LOG_FILE_LEVEL=info
 
