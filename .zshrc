@@ -611,15 +611,17 @@ case $AUTORUN in
 	exit
 	;;
 (ssh1)
-	ssh -O exit root@primary.powerman.name
-	ssh	    root@primary.powerman.name
-	ping -c 180	 primary.powerman.name
+	srv=165.232.90.38 # primary.powerman.name
+	ssh -O exit root@$srv
+	ssh	    root@$srv
+	ping -c 180	 $srv
 	exit
 	;;
 (ssh2)
-	ssh -O exit root@secondary.powerman.name
-	ssh	    root@secondary.powerman.name
-	ping -c 180	 secondary.powerman.name
+	srv=51.81.210.191 # secondary.powerman.name
+	ssh -O exit root@$srv
+	ssh	    root@$srv
+	ping -c 180	 $srv
 	exit
 	;;
 esac
