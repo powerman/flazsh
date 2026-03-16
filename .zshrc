@@ -509,6 +509,7 @@ alias mod=~/go/bin/mod # prefer over mono's /usr/bin/mod
 alias mysql='mysql --pager="less -XSFe"'
 alias sg=ast-grep # prefer over shadow's /usr/bin/sg
 alias ncdu="ncdu -t $(nproc)"
+command -v nvim >/dev/null && alias vi=nvim
 if test -x /sbin/runit-init && ! readlink /sbin/init | grep -q systemd; then
 	alias reboot='/sbin/runit-init 6'
 	alias halt='/sbin/runit-init 0'
