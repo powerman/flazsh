@@ -608,6 +608,7 @@ case $AUTORUN in
 	unset HISTFILE
 	killall "rtorrent main" 2>/dev/null
 	pidof rtorrent >/dev/null || rm -f ~/.rtorrent/rtorrent.lock
+	ulimit -n 4096
 	firejail --quiet --name=rtorrent --netns=route-no-vpn rtorrent
 	;;
 (log)
