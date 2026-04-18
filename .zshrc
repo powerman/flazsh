@@ -575,9 +575,8 @@ alias tlf='tldr --list | fzf --preview "tldr {1} --color=always" --preview-windo
 if [[ $EUID = 0 ]] || [[ $USER = root ]]; then
 	if xuser; then
 		function notify-send {
-			env USER=$XUSER HOME=$XHOME \
-				chpst -u $XUSER \
-				notify-send "$@"
+			local ENVDIR=$XHOME/.local/share/env.d
+			chpst -u $XUSER -e $ENVDIR notify-send "$@"
 		}
 	fi
 fi
