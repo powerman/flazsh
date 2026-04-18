@@ -515,6 +515,14 @@ if test -x /sbin/runit-init && ! readlink /sbin/init | grep -q systemd; then
 	alias halt='/sbin/runit-init 0'
 fi
 
+# Ignore SIGPIPE (exit status 141) usually caused by exiting from less pager before EOF.
+git() {
+    command git "$@"
+    local rc=$?
+    (( rc == 141 )) && return 0
+    return $rc
+}
+
 # New commands.
 alias -- -='cd -'
 alias ...='../..'
