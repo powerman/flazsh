@@ -621,17 +621,21 @@ case $AUTORUN in
 	exit
 	;;
 (ssh1)
+	while ! ssh-add -l | grep ' powerman@home (ED25519)'; do sleep 0.1; done
+	export FNOX_AGE_KEY=$(grep AGE-SECRET-KEY ~/.config/fnox/age.txt)
 	srv=165.232.90.38 # primary.powerman.name
-	ssh -O exit root@$srv
-	ssh	    root@$srv
-	ping -c 180	 $srv
+	ssh -O exit                 root@$srv
+	ssh -o SendEnv=FNOX_AGE_KEY root@$srv
+	ping -c 180                 $srv
 	exit
 	;;
 (ssh2)
-	srv=51.81.210.191 # secondary.powerman.name
-	ssh -O exit root@$srv
-	ssh	    root@$srv
-	ping -c 180	 $srv
+	while ! ssh-add -l | grep ' powerman@home (ED25519)'; do sleep 0.1; done
+	export FNOX_AGE_KEY=$(grep AGE-SECRET-KEY ~/.config/fnox/age.txt)
+	srv=141.94.94.110 # secondary.powerman.name
+	ssh -O exit                 root@$srv
+	ssh -o SendEnv=FNOX_AGE_KEY root@$srv
+	ping -c 180                 $srv
 	exit
 	;;
 esac
