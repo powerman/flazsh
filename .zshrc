@@ -507,6 +507,7 @@ alias grep='grep --colour=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
 alias egrep='egrep --colour=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
 alias fgrep='fgrep --colour=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
 
+alias mc='TERM=${TERM/#foot*/xterm-256color} . /usr/libexec/mc/mc-wrapper.sh'
 alias gh='PAGER= gh'
 alias dc='if test -f env.sh; then source env.sh; fi && docker compose'
 alias df='df -kh'
