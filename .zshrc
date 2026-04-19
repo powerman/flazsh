@@ -251,6 +251,15 @@ zsource $OMZ/../lib/termsupport.zsh	# update term/screen title
 zsource $OMZ/dircycle/*.plugin.zsh	# Ctrl-Shift-Left|Right to navigate on pushd stack
 # zsource $PREZTO/prompt/init.zsh
 if command -v mise >/dev/null; then
+	# To ensure user's wrappers for mise-installed tools will run
+	# we need ~/.local/bin in PATH before paths added by mise.
+	# It looks like mise removes PATH items which already exists in __MISE_ORIG_PATH,
+	# and them inserts it's own paths in the PATH just before __MISE_ORIG_PATH,
+	# so ensure ~/.local/bin is not included in __MISE_ORIG_PATH.
+	path=(${path:#$HOME/.local/bin})
+	[ -n "${__MISE_ORIG_PATH:-}" ] || export __MISE_ORIG_PATH="$PATH"
+	path=($HOME/.local/bin $path)
+
 	if [[ -n "$CURSOR_TRACE_ID" ]] then
 		eval "$(mise activate zsh | sed 's/command mise/env mise/')" # Fixes Cursor AppImage ARGV[0] issue.
 	else
