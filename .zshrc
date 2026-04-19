@@ -606,7 +606,7 @@ fi
 
 case $AUTORUN in
 (mc)
-	env CDPATH=$CDPATH mc -u
+	env CDPATH=$CDPATH TERM=xterm-256color mc -u
 	;;
 (mutt)
 	mutt
