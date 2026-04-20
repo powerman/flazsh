@@ -135,6 +135,7 @@ fi
 
 optional=(
 	~/.local/share/mise/installs/git-subrepo/latest/bin/.rc
+	~/.secret.sh
 )
 for f in $optional; do test -e "$f" && source "$f"; done
 
