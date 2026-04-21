@@ -461,7 +461,9 @@ zbindkey -M menuselect	'^O'			accept-and-infer-next-history
 # Mise in shims mode for some apps.
 if command -v mise >/dev/null; then
 	if [[ "$AUTORUN" == "mc" ]]; then
+		path=(${path:#$HOME/.local/bin})
 		prepend_new_path ~/.local/share/mise/shims
+		prepend_new_path ~/.local/bin
 	fi
 fi
 
