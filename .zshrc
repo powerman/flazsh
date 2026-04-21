@@ -162,9 +162,11 @@ export MTR_OPTIONS='-t'
 export MISE_LOG_FILE=~/.local/share/mise.log
 export MISE_LOG_FILE_LEVEL=info
 
-# Rootless docker.
 if ! [[ $EUID = 0 || $USER = root ]]; then
-	export DOCKER_HOST=${DOCKER_HOST:-unix://${XDG_RUNTIME_DIR}/docker.sock}
+	# Rootful docker.
+	export DOCKER_HOST=${DOCKER_HOST:-unix:///run/docker.sock}
+	# Rootless docker.
+	#export DOCKER_HOST=${DOCKER_HOST:-unix://${XDG_RUNTIME_DIR}/docker.sock}
 fi
 
 ZSH_CACHE_DIR=${XDG_CACHE_HOME:-~/.cache}/zsh
