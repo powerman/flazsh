@@ -142,6 +142,7 @@ for f in $optional; do test -e "$f" && source "$f"; done
 if ! [[ $EUID = 0 || $USER = root ]]; then
 	export SVDIR="$HOME/.config/runsvdir/current"
 fi
+export EDITOR=vi
 export BROWSER=xdg-open
 export GPG_TTY=$TTY
 # export QT_SELECT='qt5'
