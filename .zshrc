@@ -632,7 +632,7 @@ case $AUTORUN in
 	;;
 (ssh1)
 	while ! ssh-add -l | grep ' powerman@home (ED25519)'; do sleep 0.1; done
-	export FNOX_AGE_KEY=$(grep AGE-SECRET-KEY ~/.config/fnox/age.txt)
+	export FNOX_AGE_KEY=$(secret-tool lookup service env name FNOX_AGE_KEY)
 	srv=165.232.90.38 # primary.powerman.name
 	ssh -O exit                 root@$srv
 	ssh -o SendEnv=FNOX_AGE_KEY root@$srv
@@ -641,7 +641,7 @@ case $AUTORUN in
 	;;
 (ssh2)
 	while ! ssh-add -l | grep ' powerman@home (ED25519)'; do sleep 0.1; done
-	export FNOX_AGE_KEY=$(grep AGE-SECRET-KEY ~/.config/fnox/age.txt)
+	export FNOX_AGE_KEY=$(secret-tool lookup service env name FNOX_AGE_KEY)
 	srv=141.94.94.110 # secondary.powerman.name
 	ssh -O exit                 root@$srv
 	ssh -o SendEnv=FNOX_AGE_KEY root@$srv
