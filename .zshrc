@@ -591,6 +591,7 @@ alias notify-send='enter_plasma_session notify-send'
 #---------------------------------------
 # AutoRun
 #
+export CURRENT_TERM=$AUTORUN
 unexport AUTORUN
 if [[ $EUID = 0 ]] || [[ $USER = root ]]; then
 	unset AUTORUN
