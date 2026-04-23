@@ -584,17 +584,10 @@ rgf() (
 )
 alias tlf='tldr --list | fzf --preview "tldr {1} --color=always" --preview-window=right,70% | xargs -r tldr'
 
-if [[ $EUID = 0 ]] || [[ $USER = root ]]; then
-	if xuser; then
-		function notify-send {
-			local ENVDIR=$XHOME/.local/share/env.d
-			chpst -u $XUSER -e $ENVDIR notify-send "$@"
-		}
-	fi
-fi
 function notify-remote {
 	ssh powerman@powerman.name sudo /etc/sv/notify/actions/notify-send "${(q)@}"
 }
+alias notify-send='enter_plasma_session notify-send'
 [[ $HOST == powerman ]] && alias alert=alert-local || alias alert=alert-tg
 
 
