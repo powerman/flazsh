@@ -622,7 +622,7 @@ case $AUTORUN in
 	exit
 	;;
 (ssh1)
-	while ! ssh-add -l | grep ' powerman@home (ED25519)'; do sleep 0.1; done
+	while ! ssh-add -l | grep -q ' powerman@home (ED25519)'; do sleep 0.1; done
 	export FNOX_AGE_KEY=$(secret-tool lookup service env name FNOX_AGE_KEY)
 	srv=165.232.90.38 # primary.powerman.name
 	ssh -O exit                 root@$srv
@@ -631,7 +631,7 @@ case $AUTORUN in
 	exit
 	;;
 (ssh2)
-	while ! ssh-add -l | grep ' powerman@home (ED25519)'; do sleep 0.1; done
+	while ! ssh-add -l | grep -q ' powerman@home (ED25519)'; do sleep 0.1; done
 	export FNOX_AGE_KEY=$(secret-tool lookup service env name FNOX_AGE_KEY)
 	srv=141.94.94.110 # secondary.powerman.name
 	ssh -O exit                 root@$srv
