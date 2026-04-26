@@ -1,4 +1,4 @@
 # Use like so: sleep 10; alert
 local icon=${${${?#0}:+data-error}:-utilities-terminal}
 local cmd="$({ fc -lIn -2 2>/dev/null; fc -lIn $HISTCMD } | sed 's/\(^\|;\)\s*alert\s*$//;/^$/d' | tail -n 1)"
-enter_plasma_session notify-send -t 1440000 -u normal -i $icon -a "$CURRENT_TERM" "$(escape_xml <<<$cmd)"
+enter_plasma_session notify-send -t 1440000 -u normal -i $icon -a "$CURRENT_TERM" "$cmd"
