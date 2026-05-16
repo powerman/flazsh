@@ -584,7 +584,6 @@ alias tlf='tldr --list | fzf --preview "tldr {1} --color=always" --preview-windo
 function notify-remote {
 	ssh powerman@powerman.name sudo /etc/sv/notify/actions/notify-send "${(q)@}"
 }
-alias notify-send='enter_plasma_session notify-send'
 [[ $HOST == powerman ]] && alias alert=alert-local || alias alert=alert-tg
 
 
