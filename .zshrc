@@ -144,7 +144,6 @@ for f in $optional; do test -e "$f" && source "$f"; done
 export EDITOR=vi
 export BROWSER=xdg-open
 export GPG_TTY=$TTY
-# export QT_SELECT='qt5'
 test -f ~/.config/ripgreprc && export RIPGREP_CONFIG_PATH=~/.config/ripgreprc
 eval "$(dircolors -b ~/.dir_colors(N))"
 
@@ -518,7 +517,6 @@ alias mr='mise run'
 alias emu-g='rlwrap -a -r ~/.local/bin/emu-g'
 alias goconvey='goconvey -port=8192 -launchBrowser=false -timeout=20s -excludedDirs=vendor,testdata,bin,service,public,template'
 alias lynx='lynx -nopause'
-alias mod=~/go/bin/mod # prefer over mono's /usr/bin/mod
 alias mysql='mysql --pager="less -XSFe"'
 alias sg=ast-grep # prefer over shadow's /usr/bin/sg
 alias ncdu="ncdu -t $(nproc)"
