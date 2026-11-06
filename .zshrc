@@ -108,18 +108,18 @@ prepend_new_path() {
 }
 
 if [[ $EUID = 0 ]] || [[ $USER = root ]]; then
-	prepend_new_path ~/.local/bin
 	prepend_new_path ~/.local/share/nvim/mason/bin
+	prepend_new_path ~/.local/bin
 else
-	prepend_new_path ~/.local/bin
 	prepend_new_path ~/.local/share/nvim/mason/bin
-	prepend_new_path /mnt/storage/games/bin/
+	prepend_new_path ~/.local/bin
 	path+=(
 		$GOPATH/bin
 		~/.luarocks/bin
 		~/perl5/bin/
 		~/node_modules/.bin/
 		~/.gem/ruby/*/bin(N[-1])	# корректнее, но медленнее: $(gem env gemdir)/bin
+		/mnt/storage/games/bin/
 	)
 	[ -f ~/.ghcup/env ] && source ~/.ghcup/env
 	export INFERNO_HOME=~/inferno/
@@ -127,6 +127,8 @@ else
 	export LUA_PATH="/usr/share/lua/5.1/?.lua;./?.lua;/usr/share/lua/5.1/?/init.lua;/usr/lib64/lua/5.1/?.lua;/usr/lib64/lua/5.1/?/init.lua;$HOME/.luarocks/share/lua/5.1/?.lua;$HOME/.luarocks/share/lua/5.1/?/init.lua"
 	export LUA_CPATH="./?.so;/usr/lib64/lua/5.1/?.so;/usr/lib64/lua/5.1/loadall.so;$HOME/.luarocks/lib/lua/5.1/?.so;/usr/lib/lua/5.1/?.so"
 	# Вывод: perl -I ~/perl5/lib/perl5/ -Mlocal::lib
+	export PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"
+	export PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"
 	export PERL_MB_OPT="--install_base $HOME/perl5"
 	export PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"
 	# source ~/perl5/perlbrew/etc/bashrc
@@ -159,6 +161,8 @@ export LESS='-R -M --shift 5 -S'
 export MTR_OPTIONS='-t'
 export MISE_LOG_FILE=~/.local/share/mise.log
 export MISE_LOG_FILE_LEVEL=info
+export TMPLPROJ_DIRS="$HOME/proj"
+export TMPLPROJ_DIRS_EXCLUDE=".old"
 
 if test -S "${XDG_RUNTIME_DIR}"/docker.sock; then
 	export DOCKER_HOST=${DOCKER_HOST:-unix://${XDG_RUNTIME_DIR}/docker.sock}
@@ -192,8 +196,9 @@ OMZ=$BUNDLE/oh-my-zsh/plugins
 PREZTO=$BUNDLE/prezto/modules
 
 fpath=(
+	${XDG_DATA_HOME:-~/.local/share}/mise-completions/zsh
+	${XDG_DATA_HOME:-~/.local/share}/zsh/site-functions
 	$ZDOTDIR/functions
-	$ZDOTDIR/completions
 	$OMZ/cpanm
 	$OMZ/docker-machine
 	# $PREZTO/prompt/functions
@@ -354,15 +359,14 @@ hash -d Go=~/proj/go
 hash -d Vim=~/proj/vim
 hash -d Soft=~/proj/soft
 hash -d Conf=~/work/pk-golang-conf/current
-hash -d MSTrade=~/work/mstrade
 
 cdpath=(
 	.
 	..
 	~
+	~/Templates
 	~/proj/{go,vim,config,deb}
 	~/fork/go
-	~MSTrade
 )
 
 HISTFILE=${HISTFILE:#/dev/null}
