@@ -611,7 +611,7 @@ case $AUTORUN in
 	killall "rtorrent main" 2>/dev/null
 	pidof rtorrent >/dev/null || rm -f ~/.rtorrent/rtorrent.lock
 	ulimit -n 4096
-	firejail --quiet --name=rtorrent --netns=route-no-vpn rtorrent
+	firejail --quiet --name=rtorrent --netns=route-no-vpn zsh -c rtorrent
 	;;
 (log)
 	sudo tail -F /var/log/all/current
